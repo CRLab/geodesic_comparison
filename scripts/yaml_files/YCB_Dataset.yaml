@@ -1,0 +1,6 @@
+{holdout_model_names: [block_of_wood_6in, cheerios_14oz, melissa_doug_farm_fresh_fruit_banana,
+    play_go_rainbow_stakin_cups_2_orange], train_model_names: [black_and_decker_lithium_drill_driver,
+    brine_mini_soccer_ball, campbells_condensed_tomato_soup, clorox_disinfecting_wipes_35,
+    comet_lemon_fresh_bleach, domino_sugar_1lb, frenchs_classic_yellow_mustard_14oz,
+    melissa_doug_farm_fresh_fruit_lemon, morton_salt_shaker, play_go_rainbow_stakin_cups_1_yellow,
+    pringles_original, rubbermaid_ice_guard_pitcher_blue, soft_scrub_2lb_4oz, sponge_with_textured_cover]}

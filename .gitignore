@@ -1,0 +1,7 @@
+build*
+data/*
+mirror_ws/build
+mirror_ws/devel
+geodesic_comparison/build
+mesh_reconstruction/build
+*.*~
