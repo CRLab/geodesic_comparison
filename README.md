@@ -1,2 +1,2 @@
- ####Geodesic Comparison
- Geodesic Comparison to measure similarity between meshes
+### Geodesic Comparison
+Useful library for comparing meshes
