@@ -11,12 +11,12 @@ computer imagery. Springer, 2003, pp. 378–387.
 
 ####To Compute a Histogram for a mesh:
 ```
-jvarley@skye:~/geodesic_comparison/build$ ./geodesic_function 
+jvarley@skye:~/geodesic_comparison/build$ ./geodesic_create_histogram
 Usage: <Input filename (.ply)> <Output filename (.hist)>
 ```
 
 ####To Compare two Histograms from different meshes:
 ```
-jvarley@skye:~/geodesic_comparison/build$ ./function_comparison 
+jvarley@skye:~/geodesic_comparison/build$ ./geodesic_compare_histograms
 Usage: <Histogram filename 1> <Histogram filename 2>
 ```
