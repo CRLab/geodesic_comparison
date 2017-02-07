@@ -11,7 +11,12 @@ link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 add_library(geodesic_lib SHARED include/geodesic.h src/geodesic.cpp include/integral.h src/integral.cpp include/dijkstra.h src/dijkstra.cpp)
 
-add_executable (geodesic_function src/geodesic_function.cpp)
-add_executable (function_comparison src/function_comparison.cpp)
-target_link_libraries (geodesic_function geodesic_lib ${PCL_LIBRARIES})
-target_link_libraries (function_comparison geodesic_lib ${PCL_LIBRARIES})
+add_executable (geodesic_create_histogram src/geodesic_function.cpp)
+add_executable (geodesic_compare_histograms src/function_comparison.cpp)
+target_link_libraries (geodesic_create_histogram geodesic_lib ${PCL_LIBRARIES})
+target_link_libraries (geodesic_compare_histograms geodesic_lib ${PCL_LIBRARIES})
+
+install(TARGETS geodesic_create_histogram geodesic_compare_histograms geodesic_lib
+        RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib)
