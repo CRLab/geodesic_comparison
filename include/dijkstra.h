@@ -31,6 +31,7 @@ public:
 typedef node* nodePtr;
 
 
+
 class min_queue{
 private:
     nodePtr *heap;

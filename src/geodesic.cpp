@@ -3,24 +3,20 @@
 
 vector<int> mesh::getSamples(int num_samples) const{
     vector<int> indices;
-    if(num_samples>3.0*(float)centroids.size()/4.0){
-        for(int i=0; i<num_samples; i++){
-            indices.push_back(i);
-        }
-        return indices;
+    int inds[centroids.size()];
+    for(int i=0; i<centroids.size(); i++){
+        inds[i]=i;
+    }
+    // shuffle inds
+    for(int i=centroids.size()-1; i>0; i--){
+        int n=rand()%(i+1);
+        int temp = inds[i];
+        inds[i] = inds[n];
+        inds[n] = temp;
     }
 
-    bool check_inds[centroids.size()];
-    for(int i=0; i<centroids.size(); i++){
-        check_inds[i]=false;
-    }
     for(int i=0; i<num_samples; i++){
-        int n=rand()%centroids.size();
-        while(check_inds[n]){
-            n=rand()%centroids.size();
-        }
-        check_inds[n]=true;
-        indices.push_back(n);
+        indices.push_back(inds[i]);
     }
     return indices;
 }
@@ -79,7 +75,10 @@ vector<double> mesh::mat_mult(const MatrixXd &mat, const vector<double> &vec){
         int count = 0;
         for(int j=0; j<mat.cols(); j++){
             double mat_val = mat(i,j);
-            if(mat_val>10000.0) continue;
+            if(mat_val>10000.0){
+                cout<<"Disconnect: "<<i<<", "<<j<<endl;
+                continue;
+            }
             count++;
             val+=(mat_val*vec[j]);
         }
@@ -110,9 +109,9 @@ void mesh::getGeodesicFunction(int num_samples, int k_neighbors){
     }
     geodesic_function = mat_mult(geodesic_mat, areas);
     //scale to cm
-    for(int i=0; i<geodesic_function.size(); i++){
-        geodesic_function[i]*=100.0;
-    }
+    // for(int i=0; i<geodesic_function.size(); i++){
+    //     geodesic_function[i]*=100.0;
+    // }
 }
 
 //print to file as .hist
@@ -161,9 +160,9 @@ mesh::mesh(const char *filename, int num_samples, int k_neighbors){
             Vector3f v;
             char line_cstr[line.length()];
             strcpy(line_cstr, line.c_str());
-            v[0] = atof(strtok(line_cstr, " "));
-            v[1] = atof(strtok(NULL, " "));
-            v[2] = atof(strtok(NULL, " "));
+            v[0] = 100*atof(strtok(line_cstr, " "));
+            v[1] = 100*atof(strtok(NULL, " "));
+            v[2] = 100*atof(strtok(NULL, " "));
             vertices.push_back(v);
         }
         //retrieve triangles
@@ -211,6 +210,7 @@ mesh::mesh(const char *filename, int num_samples, int k_neighbors){
     }
 
     cout<<"Centroids and areas computed"<<endl;
+    cout<<"Total Area: "<<total_area<<" cm^2"<<endl;
 
     //seed the random number generator
     srand(time(NULL));

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <numeric>
 
 #define PI 3.1415926535897
 
@@ -65,7 +66,16 @@ public:
 };
 
 //****************************************************************
-//class for performing integration on functions
+//Kahan vector accumulation method
+struct KahanAccumulation
+{
+    double sum;
+    double correction;
+};
+KahanAccumulation KahanSum(KahanAccumulation accumulation, double value);
+double get_sum(vector<double> arr);
+
+//method for performing integration on functions
 double integral(double lb, double ub, int num_div, const functional &func);
 
 //compare two shape distributions by Jenson-Shannon Divergence

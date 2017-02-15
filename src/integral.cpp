@@ -1,5 +1,7 @@
 #include "integral.h"
 
+#pragma optimize( "[optimization-list]", {on | off} ) 
+
 //functions for getting median of list
 bool sort_l2h(double i, double j){
     return (i<j);
@@ -20,8 +22,6 @@ double K(double x){
     out/=sqrt(2*PI);
     return out;
 }
-
-
 
 
 //functional implementations
@@ -108,20 +108,39 @@ double functional_product::operator()(double x) const{
 }
 
 //****************************************************************
+#pragma optimize( "", off )
+KahanAccumulation KahanSum(KahanAccumulation accumulation, double value)
+{
+    KahanAccumulation result;
+    double y = value - accumulation.correction;
+    double t = accumulation.sum + y;
+    result.correction = (t - accumulation.sum) - y;
+    result.sum = t;
+    return result;
+}
+#pragma optimize( "", on )
+
+double get_sum(vector<double> arr){
+    KahanAccumulation init = {0};
+    KahanAccumulation result = accumulate(arr.begin(), arr.end(), init, KahanSum);
+    return result.sum;
+}
+
 double integral(double lb, double ub, int num_div, const functional &func){
     double len = ub-lb;
     double step_size = len/(double)num_div;
     double result=0.0;
     double vals[num_div+1];
     double x;
+    vector<double> results;
     for(int i=0; i<num_div+1; i++){
         x=lb+(double)i*step_size;
         vals[i]=func(x);
     }
     for(int i=0; i<num_div; i++){
-        result+=(vals[i]+vals[i+1])*step_size/2;
+        results.push_back((vals[i]+vals[i+1])*step_size/2.0);
     }
-    return result;
+    return get_sum(results);
 }
 
 double getDivergence(const shape_distribution &p1, const shape_distribution &p2){
@@ -132,15 +151,13 @@ double getDivergence(const shape_distribution &p1, const shape_distribution &p2)
     functional_product arg2(&p1, &log_p1);
     log_2_functional log_p2(&p2);
     functional_product arg3(&p2, &log_p2);
-    double lb1 = -p1.h*20;
-    double lb2 = -p2.h*20;
-    double ub1 = p1.h*20;
-    double ub2 = p2.h*20;
-    double num_div = 100000;
+    double lb = -2000;
+    double ub = 2000;
+    double num_div = 10000;
 
-    double r1 = -integral((lb1+lb2)/2.0, (ub1+ub2)/2.0, num_div, arg1);
-    double r2 = -integral(lb1, ub1, num_div, arg2);
-    double r3 = -integral(lb2, ub2, num_div, arg3);
+    double r1 = -integral(lb, ub, num_div, arg1);
+    double r2 = -integral(lb, ub, num_div, arg2);
+    double r3 = -integral(lb, ub, num_div, arg3);
 
     return fabs(r1-((r2+r3)/2.0));
 }
